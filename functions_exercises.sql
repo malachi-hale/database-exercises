@@ -12,7 +12,8 @@ SELECT first_name, last_name,  datediff(CURDATE(), hire_date) as days_working_at
 	WHERE (hire_date LIKE '199%') AND (birth_date LIKE '%12-25');
 	
 SELECT MIN(salary) as smallest_salary, MAX(salary) as largest_salary
-	FROM salaries;
+	FROM salaries
+	WHERE TO_DATE > CURDATE();
 	
 SELECT lower(CONCAT(SUBSTR(first_name, 1, 1), SUBSTR(last_name, 1, 4), "_", SUBSTR(birth_date, 6, 2), SUBSTR(birth_date, 3, 2))) as username, first_name, last_name, birth_date
 	FROM employees;
