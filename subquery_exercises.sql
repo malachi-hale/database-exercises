@@ -1,9 +1,4 @@
 USE employees;
-show tables;
-describe titles;
-describe dept_emp_latest_date;
-describe dept_manager;
-describe salaries;
 
 #1
 SELECT * 
@@ -75,4 +70,42 @@ SELECT COUNT(salary)
 		WHERE salaries.to_date >= NOW()
 			AND salary >= (SELECT MAX(salary) FROM salaries WHERE salaries.to_date >= NOW()) - (SELECT STD(salary) FROM salaries WHERE salaries.to_date >= NOW()) ;
 #83 current salaries are within 1 standard deviation of the current highest salaries. 
+
+
+#BONUS 1
+SELECT dept_name
+	FROM departments 
+		WHERE dept_no IN (
+			SELECT dept_no 
+			FROM dept_manager 
+			WHERE dept_manager.to_date >= NOW()
+				AND emp_no in (
+					SELECT emp_no 
+					FROM employees 
+					WHERE gender = 'F'
+				)		
+				);
+#Development, Finance, Human Resources, Resarch
+
+#Bonus 2
+SELECT first_name, last_name
+	FROM employees
+	WHERE emp_no IN (
+		SELECT emp_NO 
+		FROM salaries
+			WHERE salary = (SELECT MAX(salary) FROM salaries)
+	);
+	
+#Bonus 3
+SELECT dept_name
+	FROM departments
+		WHERE dept_no IN (
+			SELECT dept_no 
+			FROM dept_emp
+				WHERE emp_no IN (
+					SELECT emp_no
+					FROM salaries
+						WHERE salary = (SELECT MAX(salary) FROM salaries)
+				)
+		);
 	
