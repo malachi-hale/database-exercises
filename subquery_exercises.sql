@@ -68,14 +68,28 @@ SELECT *
 SELECT COUNT(salary)
 	FROM salaries
 		WHERE salaries.to_date >= NOW()
-			AND salary >= (SELECT MAX(salary) FROM salaries WHERE salaries.to_date >= NOW()) - (SELECT STD(salary) FROM salaries WHERE salaries.to_date >= NOW());
+			AND salary >= (SELECT MAX(salary) FROM salaries WHERE salaries.to_date >= NOW()) - (SELECT STDDEV(salary) FROM salaries WHERE salaries.to_date >= NOW());
 #83 current salaries are within 1 standard deviation of the current highest salaries. 
 
-SELECT COUNT(salary)
+SELECT COUNT(salary) 
 	FROM salaries 
 		WHERE salaries.to_date >= NOW();
-#There are 240124 total salaries. SO 83/240124 salaries, meaning approximately 0.03% of salaries are within 1 standard deviation of the maximum salary. 
+#There are 240124 total salaries. 
+		
+SELECT  ((
+SELECT COUNT(salary)
+	FROM salaries
+		WHERE salaries.to_date >= NOW()
+			AND salary >= (SELECT MAX(salary) FROM salaries WHERE salaries.to_date >= NOW()) - (SELECT STDDEV(salary) FROM salaries WHERE 				salaries.to_date >= NOW()))/
+			(
+			SELECT COUNT(salary) 
+				FROM salaries 
+				WHERE salaries.to_date >= NOW()
+			) * 100
+			) AS percent_of_salaries;
+#0.0346 percent of salaries are within one standard deviation of the maximum salary. 	
 
+ 
 #BONUS 1
 SELECT dept_name
 	FROM departments 
