@@ -73,6 +73,25 @@ SELECT *
 	FROM film_list;
 SELECT *
 	FROM film_actor;
+SELECT * 
+	FROM film;
+SELECT * 
+	FROM inventory;
+SELECT * 
+	FROM customer;
+SELECT * 
+	FROM customer_list;
+SELECT * 
+	FROM store;
+SELECT * 
+	FROM language;
+SELECT * 
+	FROM payment;
+SELECT *
+	FROM rental;
+SELECT *
+	FROM film_text;
+
 
 #1	
 SELECT lower(CONCAT(first_name, ' ', last_name))
@@ -107,4 +126,50 @@ SELECT DISTINCT last_name, COUNT(last_name) as count
 	HAVING count > 1
 	ORDER BY count DESC;
 	
+#8 
+SELECT title, COUNT(actor_id) as number_of_actors
+	FROM film 
+	JOIN film_actor 
+		ON film.film_id = film_actor.film_id
+	GROUP BY film.film_id
+	ORDER BY number_of_actors DESC;
+	
+SELECT COUNT(film_id) as copies_in_inventory
+	FROM inventory 
+	WHERE film_id = 439;
+	
+SELECT title 
+	FROM film 
+		WHERE title LIKE "K%" 
+		OR title LIKE "Q%";
 
+SELECT CONCAT(first_name, ' ', last_name)
+	FROM actor 
+		WHERE actor_id IN (
+			SELECT actor_id 
+			FROM film_actor 
+			WHERE film_id IN 
+				(
+				SELECT film_id 
+				FROM film 
+				WHERE title = 'ALONE TRIP'
+				)
+		);
+
+SELECT CONCAT(first_name, ' ', last_name) as name, email
+	FROM customer 
+	WHERE customer_id IN (
+		SELECT customer_id 
+		FROM customer_list 
+		WHERE country = 'Canada'
+	)
+	ORDER By name;
+	
+SELECT title
+	FROM film_list
+		WHERE category = 'Family';
+		
+		
+
+	
+		
