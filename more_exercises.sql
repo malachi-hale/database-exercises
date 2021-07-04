@@ -87,11 +87,16 @@ SELECT *
 	FROM language;
 SELECT * 
 	FROM payment;
+DESCRIBE payment;
 SELECT *
 	FROM rental;
 SELECT *
 	FROM film_text;
-
+SELECT * 
+	FROM sales_by_store;
+SELECT * 
+	FROM category;
+DESCRIBE category;
 
 #1	
 SELECT lower(CONCAT(first_name, ' ', last_name))
@@ -170,6 +175,84 @@ SELECT title
 		WHERE category = 'Family';
 		
 		
+#1A
+SELECT *
+	FROM actor;
+#1B
+SELECT last_name
+	FROM actor;
 
+#2A 
+SELECT DISTINCT last_name 
+	FROM actor;
 	
+#2B
+SELECT DISTINCT postal_code
+	FROM address;
+
+#2C
+SELECT DISTINCT rating
+	FROM film;
+	
+#3A
+SELECT title, description, rating, length
+	FROM film 
+	WHERE length >= 180;
+	
+#3B
+SELECT payment_id, amount, payment_date 
+	FROM payment 
+	WHERE payment_date >= 2005-05-27;
+	
+#3c 
+
+#3d 
+SELECT * 
+	FROM customer 
+		WHERE last_name LIKE '%S'
+			AND first_name LIKE '%N';
+			
+#3e
+SELECT *
+	FROM customer 
+		WHERE active = 0
+		OR last_name LIKE 'M%';
 		
+#3f 
+SELECT * 
+	FROM category 
+	WHERE category_id > 4 
+	AND (name LIKE 'C%'
+		or name LIKE 'S%'
+		or name LIKE 'T%');
+
+#3g 
+SELECT staff_id, first_name, last_name, address_id, picture, email, store_id, active, username, last_update 
+	FROM staff 
+	WHERE password IS NOT NULL;	
+
+#3h 
+SELECT staff_id, first_name, last_name, address_id, picture, email, store_id, active, username, last_update 
+	FROM staff 
+	WHERE password IS NULL;	
+
+#4a
+SELECT phone, district
+	FROM address 
+	WHERE district IN ('California', 'England', 'Taipei', 'West Java');
+
+#4b
+SELECT payment_id, amount, payment_date 
+	FROM payment 
+	WHERE substring(payment_date, 1, 10) IN ('2005-05-25', '2005-05-27', '2005-05-29');
+
+#4c 
+SELECT * 
+	FROM film
+	WHERE rating IN ('G', 'PG-13', 'NC-17');
+	
+#5a 
+SELECT * 
+	FROM payment
+	WHERE payment_date BETWEEN '2005-05-25 12:00:00' AND '2005-05-26 11:59:59';
+	
