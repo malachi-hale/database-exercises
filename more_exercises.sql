@@ -7,11 +7,7 @@ SELECT
 	t2.average_salary,
 	(t1.manager_salary - t2.average_salary) as difference, 
 	((t1.manager_salary/t2.average_salary)*100) as salary_relative_to_department_average,
-	((t1.manager_salary-t2.average_salary)/(SELECT STD(salary) from salaries 
-	JOIN dept_emp 
-		ON dept_emp.emp_no = salaries.emp_no
-	WHERE salaries.to_date >= NOW()
-		AND dept_emp.to_date >=NOW())) as z_score
+	((t1.manager_salary-t2.average_salary)/(t2.standdev)) as z_score
 FROM 
 (
 SELECT dept_name, salary as manager_salary
@@ -29,7 +25,7 @@ WHERE salaries.emp_no IN (
 INNER JOIN 
 (
 
-SELECT dept_name, AVG(salary) as average_salary 
+SELECT dept_name, AVG(salary) as average_salary, STD(salary) AS standdev 
 FROM departments 
 JOIN dept_emp 
 	ON dept_emp.dept_no=departments.dept_no
