@@ -71,8 +71,22 @@ SELECT * FROM temp_payment;
 #3
 USE employees;
 
-SHOW TABLES;
+CREATE TEMPORARY TABLE germain_1458.zscore8 AS 
+	SELECT dept_name, AVG(salary) as z_score
+	FROM salaries 
+	JOIN dept_emp
+	ON salaries.emp_no=dept_emp.emp_no
+	JOIN departments 
+	ON departments.dept_no = dept_emp.dept_no 	 
+	WHERE 
+		dept_emp.to_date >= NOW()
+		AND salaries.to_date >= NOW()
+	GROUP BY dept_name
+	ORDER BY z_score;
+	
+USE germain_1458;
+UPDATE zscore8 SET z_score = z_score - (SELECT AVG(salary) FROM employees.salaries);
+UPDATE zscore8 SET z_score = z_score / ( SELECT STD(salary) FROM employees.salaries);
+SELECT * FROM zscore8;
 
-SELECT * FROM salaries;
-SELECT * FROM dept_emp;
-SELECT * FROM departments;
+#Sales has the highest Z-score at 1.4814. Human Resources has the lowest Z-Score at 0.0066.

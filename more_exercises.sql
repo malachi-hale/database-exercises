@@ -1,3 +1,41 @@
+USE employees;
+show tables;
+
+SELECT 
+	t1.dept_name,
+	t1.manager_salary,
+	t2.average_salary,
+	(t1.manager_salary - t2.average_salary) as difference
+FROM 
+(
+SELECT dept_name, salary as manager_salary
+FROM dept_manager 
+JOIN salaries 
+	ON dept_manager.emp_no=salaries.emp_no
+JOIN departments
+	ON dept_manager.dept_no = departments.dept_no
+WHERE salaries.emp_no IN (
+	SELECT emp_no
+	FROM dept_manager 
+	WHERE dept_manager.to_date >= NOW()
+) AND salaries.to_date >= NOW()
+) AS t1
+INNER JOIN 
+(
+
+SELECT dept_name, AVG(salary) as average_salary 
+FROM departments 
+JOIN dept_emp 
+	ON dept_emp.dept_no=departments.dept_no
+JOIN salaries 
+	ON salaries.emp_no = dept_emp.emp_no
+WHERE salaries.to_date >= NOW() 
+	AND dept_emp.to_date>= NOW()
+GROUP BY departments.dept_no
+) as t2
+ON t1.dept_name = t2.dept_name
+ORDER BY difference DESC;
+#YES! In the Customer Service and the Production Departments the manager makes less than the average salary. 
 
 USE world;
 show tables;
