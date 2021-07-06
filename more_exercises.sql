@@ -5,7 +5,13 @@ SELECT
 	t1.dept_name,
 	t1.manager_salary,
 	t2.average_salary,
-	(t1.manager_salary - t2.average_salary) as difference
+	(t1.manager_salary - t2.average_salary) as difference, 
+	((t1.manager_salary/t2.average_salary)*100) as salary_relative_to_department_average,
+	((t1.manager_salary-t2.average_salary)/(SELECT STD(salary) from salaries 
+	JOIN dept_emp 
+		ON dept_emp.emp_no = salaries.emp_no
+	WHERE salaries.to_date >= NOW()
+		AND dept_emp.to_date >=NOW())) as z_score
 FROM 
 (
 SELECT dept_name, salary as manager_salary
@@ -34,9 +40,10 @@ WHERE salaries.to_date >= NOW()
 GROUP BY departments.dept_no
 ) as t2
 ON t1.dept_name = t2.dept_name
-ORDER BY difference DESC;
+ORDER BY z_score DESC;
 #YES! In the Customer Service and the Production Departments the manager makes less than the average salary. 
 
+#World Database
 USE world;
 show tables;
 
@@ -49,6 +56,13 @@ SELECT *
 	FROM country;
 SELECT * 
 	FROM countrylanguage;
+	
+SELECT Language, Percentage 
+	FROM countrylanguage 
+	JOIN country on countrylanguage.countrycode = country.code
+	JOIN city on countrylanguage.countrycode = city.countrycode
+	WHERE city.name ='Santa Monica'
+	ORDER BY Percentage;
 	
 SELECT region, COUNT(Name) as num_countries
 	FROM country
@@ -92,7 +106,7 @@ SELECT district
 
 #Sakila Database
 
-use sakila;
+use sak®ila;
 show tables;
 
 SELECT * 
@@ -293,4 +307,13 @@ SELECT *
 SELECT * 
 	FROM payment
 	WHERE payment_date BETWEEN '2005-05-25 12:00:00' AND '2005-05-26 11:59:59';
+
+#5b
+SELECT * 
+	FROM film
+	WHERE LENGTH(description) BETWEEN 100 and 120;
 	
+#6a 
+SELECT * 
+	FROM film 
+	WHERE description LIKE "A Thoughtful%";
