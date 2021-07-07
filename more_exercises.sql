@@ -150,6 +150,11 @@ DESCRIBE category;
 SELECT lower(CONCAT(first_name, ' ', last_name))
 	FROM actor;
 
+#2
+SELECT actor_id, first_name, last_name 
+	FROM actor 
+	WHERE first_name = 'Joe';
+
 #3
 SELECT *
 	FROM actor 
@@ -180,6 +185,30 @@ SELECT DISTINCT last_name, COUNT(last_name) as count
 	ORDER BY count DESC;
 	
 #8 
+
+#9 
+SELECT CONCAT(first_name, " ", last_name) as name, address
+	FROM staff 
+	JOIN address
+		ON address.address_id = staff.address_id;
+		
+SELECT * 
+	FROM staff;
+SELECT * 
+	FROM store;
+show tables;
+select * 
+	FROM sales_by_store;
+SELECT *
+	FROM payment;
+
+SELECT CONCAT(first_name, " ", last_name) as name, SUM(amount) as total
+	FROM staff 
+	JOIN payment 
+		ON staff.staff_id = payment.staff_id
+	WHERE substring(payment_date, 1, 7) = '2005-08'
+	GROUP BY name;
+
 SELECT title, COUNT(actor_id) as number_of_actors
 	FROM film 
 	JOIN film_actor 
@@ -221,8 +250,44 @@ SELECT CONCAT(first_name, ' ', last_name) as name, email
 SELECT title
 	FROM film_list
 		WHERE category = 'Family';
-		
-		
+
+#17
+SELECT store.store_id, SUM(amount)
+	FROM payment
+		JOIN rental
+			ON payment.rental_id=rental.rental_id
+		JOIN inventory 
+			ON inventory.inventory_id=rental.rental_id
+		JOIN store 
+			ON store.store_ID = inventory.store_ID
+	GROUP BY store_id;
+	
+#18
+show tables;
+
+SELECT store_id, city, country
+	FROM store
+		JOIN address 
+			ON address.address_id=store.address_id
+		JOIN city 
+			ON city.city_id = address.city_id
+		JOIN country 
+			ON country.country_id = city.country_id;
+
+#19
+SELECT category.name as genre, SUM(amount) as revenue
+	FROM category 
+		JOIN film_category
+			ON film_category.category_id = category.category_id
+		JOIN inventory 
+			ON inventory.film_id = film_category.film_id 
+		JOIN rental 
+			ON rental.inventory_id = inventory.inventory_id 
+		JOIN payment 
+			on payment.rental_id = rental.rental_id
+		GROUP BY genre 
+		ORDER BY revenue DESC 
+		LIMIT 5; 		
 #1A
 SELECT *
 	FROM actor;
