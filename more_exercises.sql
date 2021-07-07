@@ -502,4 +502,23 @@ SELECT CONCAT(last_name, ", ", first_name) as actor_name, COUNT(DISTINCT film_id
 		LIMIT 5;
 
 #7 
-			
+SELECT substring(payment_date, 1, 7) as month, store_id, SUM(amount) as sales
+	FROM payment
+	JOIN customer
+		ON payment.customer_id = customer.customer_id
+	WHERE substring(payment_date, 1, 4) = '2005'
+	GROUP BY month, store_id
+	ORDER BY month;
+	
+#8 
+SELECT title, CONCAT(last_name, ", ", first_name ), phone
+FROM film 
+JOIN inventory 
+			ON film.film_id = inventory.film_id 
+JOIN rental 
+		ON rental.inventory_id = inventory.inventory_id
+JOIN customer 
+		ON customer.customer_id = rental.customer_id
+JOIN customer_list 
+		ON customer.customer_id = customer_list.ID
+WHERE return_date IS NULL;
