@@ -313,3 +313,193 @@ SELECT *
 SELECT * 
 	FROM film 
 	WHERE description LIKE "A Thoughtful%";
+#6b 
+SELECT * 
+	FROM film 
+	WHERE description LIKE "%Boat";
+	
+#6c 
+SELECT * 
+	FROM film 
+	WHERE description LIKE "%Database%" 
+		AND length > 180;
+
+#7a 
+SELECT * 
+	FROM payment 
+	LIMIT 20;
+	
+#7b 
+SELECT payment_date, amount
+	FROM payment
+	WHERE amount > 5 
+	LIMIT 1000, 1001;
+	
+#7c 
+SELECT * 
+	FROM customer 
+	LIMIT 101, 100;
+	
+#8a
+SELECT * 
+	FROM film 
+	ORDER BY length;
+	
+#8b 
+SELECT DISTINCT rating
+	FROM film 
+	ORDER BY rating DESC;
+	
+#8c 
+SELECT payment_date, amount
+	FROM payment
+	ORDER BY amount DESC 
+	LIMIT 20;
+	
+#8d 
+SELECT title, description, special_features, length, rental_duration
+	FROM film 
+	WHERE special_features LIKE "%Behind the Scenes%"
+	AND length < 120 
+	AND rental_duration BETWEEN 5 AND 7 
+	ORDER BY length DESC;
+	
+#9a
+SELECT t1.customer_first_name, t1.customer_last_name, t2.actor_first_name, t2.actor_last_name
+FROM
+(SELECT first_name as customer_first_name, last_name as customer_last_name
+	FROM customer) as t1
+LEFT JOIN 
+(SELECT first_name as actor_first_name, last_name as actor_last_name
+	FROM actor)  as t2
+ON t1.customer_last_name = t2.actor_last_name;
+
+#9b
+SELECT t1.customer_first_name, t1.customer_last_name, t2.actor_first_name, t2.actor_last_name
+FROM
+(SELECT first_name as customer_first_name, last_name as customer_last_name
+	FROM customer) as t1
+RIGHT JOIN 
+(SELECT first_name as actor_first_name, last_name as actor_last_name
+	FROM actor)  as t2
+ON t1.customer_last_name = t2.actor_last_name;
+
+#9c 
+SELECT t1.customer_first_name, t1.customer_last_name, t2.actor_first_name, t2.actor_last_name
+FROM
+(SELECT first_name as customer_first_name, last_name as customer_last_name
+	FROM customer) as t1
+INNER JOIN 
+(SELECT first_name as actor_first_name, last_name as actor_last_name
+	FROM actor)  as t2
+ON t1.customer_last_name = t2.actor_last_name;
+
+#9d 
+SELECT t1.city, t2.country
+FROM
+(SELECT country_id, city 
+	FROM city) as t1
+LEFT JOIN 	
+(SELECT country_id, country
+	FROM country) as t2
+ON t1.country_id = t2.country_id;
+
+#9e
+SELECT t1.title, t1.description, t1.release_year, t2.name as language
+FROM 
+(SELECT * 
+	FROM film) as t1
+LEFT JOIN 
+(SELECT * 
+	FROM language) as t2
+ON t1.language_id = t2.language_id;
+
+#9f 
+SELECT t1.first_name, t1.last_name, t2.address, t2.address2, t2.postal_code, t3.city
+FROM 
+(SELECT * 
+	FROM staff) as t1 
+LEFT JOIN 
+(SELECT * 
+	FROM address) as t2 
+ON t1.address_id = t2.address_id
+LEFT JOIN 
+(SELECT * 
+	FROM city) as t3 
+ON t2.city_id = t3.city_id;
+
+#1 
+SELECT * 
+	FROM film;
+SELECT * 
+	FROM film_list;
+show tables;
+SELECT AVG(replacement_cost) 
+	FROM film;
+SELECT rating, AVG(replacement_cost)
+	FROM film 
+	GROUP BY rating
+	ORDER BY rating;
+	
+#2 
+SELECT category as name, COUNT(*) as count
+	FROM film_list
+	GROUP BY category
+	ORDER BY name;
+	
+#3
+SELECT title, COUNT(rental_id) as total
+	FROM film 
+	JOIN inventory 
+		on film.film_id = inventory.film_id 
+	JOIN rental 
+		on rental.inventory_id = inventory.inventory_id
+	GROUP BY title 
+	ORDER by total DESC
+	LIMIT 5;
+	
+#4 
+show tables;
+SELECT * 
+	FROM payment;
+SELECT * 
+	FROM customer;
+SELECT * 
+	FROM rental;
+SELECT * 
+	FROM actor;
+SELECT * 
+	FROM actor_info;
+	
+SELECT title, SUM(amount) as total
+	FROM film 
+		 JOIN inventory 
+			ON film.film_id = inventory.film_id 
+		 JOIN rental 
+			ON rental.inventory_id = inventory.inventory_id
+		JOIN payment 
+			ON payment.rental_id = rental.rental_id
+		GROUP BY title
+		ORDER BY total DESC
+		LIMIT 5;
+		
+#5 
+SELECT CONCAT(last_name, ", ", first_name) as name, SUM(amount) as total
+	FROM customer 
+	JOIN payment 
+		ON payment.customer_id = customer.customer_id
+		GROUP BY name 
+		ORDER BY total DESC
+		LIMIT 1;
+		
+#6 
+SELECT CONCAT(last_name, ", ", first_name) as actor_name, COUNT(DISTINCT film_id) as total 
+	FROM actor
+		JOIN film_actor
+		ON film_actor.actor_id = actor.actor_id 
+		GROUP BY actor_name 
+		ORDER BY total DESC
+		LIMIT 5;
+
+#7 
+			
